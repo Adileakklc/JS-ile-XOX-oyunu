@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>XOX Oyunu</title>
+	<style>
+        #tablo {
+	width: 360px;
+	height: 360px;
+	display: flex;
+	margin-bottom: 23px;
+	flex-wrap: wrap;
+}
+       #basla-butonu {
+  background-color: green;
+  border: none;
+  color: white;
+  padding: 23px 41px; 
+  text-align: center;
+  text-decoration: none;
+  display: inline-block; /* display : inline-block yan yana buton yapmayı sağlar */
+  font-size: 30px; /* font boyutunu belirlemek için kullanılır*/
+  margin-bottom: 20px; /* Başla butonun altına boşluk bıramak için kullanılır*/
+  cursor: pointer; /* Html ögesi üstüne geldiğinde el işareti şeklinde görülür */
+
+}
+
+#status {
+  font-size: 24px;
+  color: rgb(111, 14, 14);
+}
+
+
+.cell {
+	width: 120px;
+	height: 120px;
+	border: 5px solid #0616c7;
+	box-sizing: border-box;
+	font-size: 90px;
+	text-align: center;
+	line-height: 100px;
+	cursor: pointer;
+	background-color: rgb(243, 198, 232);
+	color: #052802;
+}
+
+.cell:hover { /* fare imleci geldiğinde oluşan renk */
+	background-color: #de96d2;
+}
+
+    </style>
+</head>
+<body>
+	<h1>XOX Oyunu</h1>
+
+	<button id="basla-butonu">BAŞLA</button>
+	<p id="status"></p>
+
+
+	<div id="tablo">
+		<div class="cell" id="0"></div>
+		<div class="cell" id="1"></div>
+		<div class="cell" id="2"></div>
+		<div class="cell" id="3"></div>
+		<div class="cell" id="4"></div>
+		<div class="cell" id="5"></div>
+		<div class="cell" id="6"></div>
+		<div class="cell" id="7"></div>
+		<div class="cell" id="8"></div>
+	</div>
+	<p id="turn"></p>
+	<script >
+        // Oyun Tablosu
+let tablo = ['', '', '', '', '', '', '', '', ''];
+
+// Oyuncular
+let bilgisayar = 'X';
+let kullanici = 'O';
+
+// Şu anki oyuncu
+let guncelOyuncu = bilgisayar;
+
+// 'cell' sınıfından herhangi bir hücreye tıklandığında tiklananHucre işlevini çağırır.
+let cells = document.querySelectorAll('.cell');
+cells.forEach(cell => { //forEach bir dizi üzerinde döngü oluşturarak her bir öğe için belirtilen işlevin çalışmasını sağlar.
+	cell.addEventListener('click', tiklananHucre);
+});
+
+const baslaButonu = document.getElementById("basla-butonu");
+baslaButonu.addEventListener("click", baslaOyunu);
+
+function baslaOyunu() {
+  document.getElementById("status").textContent = "OYUN BAŞLADI!";
+}
+
+function oyuncudegisiklik() {
+	if (guncelOyuncu === bilgisayar) {
+		guncelOyuncu = kullanici;
+	} else {
+		guncelOyuncu = bilgisayar;
+	}
+	
+	const siraYazisi = document.getElementById('turn');
+	siraYazisi.textContent = `Sıradaki oyuncu: ${guncelOyuncu}`;
+	siraYazisi.style.color = (guncelOyuncu === 'X') ? 'red' : 'blue'; //Sıradaki oyuncu O olunca yazı mavi X olunca kırmızı olur.
+	siraYazisi.style.fontSize = '40px';
+}
+
+
+// Hücre seçildiğinde çalışacak fonksiyon
+function tiklananHucre(event) {
+	let cell = event.target;
+	let index = cell.id;
+	if (tablo[index] === '') {
+		tablo[index] = guncelOyuncu;
+		cell.textContent = guncelOyuncu;
+		cell.classList.add(`player${guncelOyuncu}`);
+		if (checkWin()) {
+			alert(`${guncelOyuncu} kazandı!`);
+			resetGame();
+		} else if (checkDraw()) {
+			alert('Oyun berabere bitti.');
+			startRPS();
+		} else {
+			oyuncudegisiklik();
+		}
+	}
+}
+
+// Oyunu sıfırlamasını sağlayan fonksiyon
+function resetGame() {
+	tablo = ['', '', '', '', '', '', '', '', ''];
+	guncelOyuncu = bilgisayar;
+	document.getElementById('turn').textContent = `Sıra: ${guncelOyuncu}`;
+	cells.forEach(cell => {
+		cell.textContent = '';
+		cell.classList.remove('bilgisayar');
+		cell.classList.remove('kullanici');
+	});
+}
+
+// Beraberlik için oluşturduğum kontrol fonksiyonu
+function checkDraw() {
+return tablo.every(cell => cell !== '');
+}
+
+// Kazanma durumunu kontrol etmek için oluşturduğum fonksiyon
+function checkWin() {
+
+// Dikey kazanma durumudur.
+for (let i = 0; i < 3; i++) {
+if (tablo[i] !== '' && tablo[i] === tablo[i + 3] && tablo[i] === tablo[i + 6]) {
+return true;
+}
+}
+
+// Yatay kazanma durumudur.
+for (let i = 0; i < 7; i += 3) {
+	if (tablo[i] !== '' && tablo[i] === tablo[i + 1] && tablo[i] === tablo[i + 2]) {
+		return true;
+	}
+}
+
+// Çapraz kazanma durumudur. Kutuların konumu sayesinde belirlenir.
+if (tablo[0] !== '' && tablo[0] === tablo[4] && tablo[0] === tablo[8]) { 
+	return true;
+}
+if (tablo[2] !== '' && tablo[2] === tablo[4] && tablo[2] === tablo[6]) {
+	return true;
+}
+
+// Hiçbiri kazanmazsa false döndürür . Taş kağıt makas oyunu başlar.
+return false;
+}
+
+// Taş-kağıt-makas oyunu için başlangıç fonksiyonu
+function startRPS() {
+// Rastgele bilgisayar seçimi
+let computerChoice = Math.floor(Math.random() * 3); // bilgisayarın seçiminin random olmasını sağlar. 3 ile çarptığımız için üç seçnek vardır.
+let choices = ['taş', 'kağıt', 'makas'];
+let computerSelection = choices[computerChoice];
+// Kullanıcı seçimi al
+let userSelection = prompt('Oyun berabere kaldı! Taş mı, kağıt mı, makas mı?').toLowerCase(); 
+
+// Kazananı belirleyen fonksiyondur. Eğer bu seferde berabere kalınırsa berabere biter. X bilgisayar O kullanıcının seçimidir.
+let winner = '';
+if (userSelection === 'taş') { //kullanıcı taş girdiğinde çalışır
+	if (computerSelection === 'makas') {
+		winner = 'O kazandı';
+	} else if (computerSelection === 'kağıt') {
+		winner = 'X kazandı';
+	} else if (computerSelection === 'taş'){
+		winner = 'Berabere kalındı'
+	}
+} 
+else if (userSelection === 'kağıt') { //kullanıcı kağıt girdiğinde çalışır
+	if (computerSelection === 'taş') {
+		winner = 'O kazandı';
+	} else if (computerSelection === 'makas') {
+		winner = 'X kazandı';
+	} else if (computerSelection === 'kağıt'){
+		winner ='Berabere kalındı';
+	}
+}
+ else if (userSelection === 'makas') { // kullanıcı makas girdiğinde çalışır
+	if (computerSelection === 'kağıt') {
+		winner = 'O kazandı';
+	} else if (computerSelection === 'taş') {
+		winner = 'X kazandı';
+	} else if (computerSelection === 'makas'){
+		winner ='Berabere kalındı';
+	}
+}else (
+  winner = 'Yanlış seçim !!!' //	tas kağıt makas dışında herhangi bir şey yazıldığı zaman bu yazı yazılır
+)
+
+// Kazananı alert ile bildiririz
+alert(`${winner} 
+Bilgisayarın seçimi (X): ${computerSelection} 
+Kullanıcının seçimi (O): ${userSelection}`);
+resetGame();
+}
+    </script>
+</body>
+</html>
