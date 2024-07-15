@@ -1,4 +1,4 @@
-# JS-ile-XOX-oyunu
+# XOX-oyunu
 3x3 tabloya sahip Javascript kodu ile hazırlanmış XO oyunudur. 
 Bu XO oyununda üç tane aynı harfi ; çarpraz , yatay veya dikey şekilde yan yana getiren kazanır. 
 Eğer kimse kazanamazsa oyun berabere olur ve taş kağıt makas oyunu oynanır. 
