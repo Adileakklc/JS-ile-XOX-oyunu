@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>XOX Oyunu</title>
 	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #ffe6f0;
+			text-align: center;
+		}
+		h1 {
+			color: #ff66b2;
+		}
         #tablo {
 	width: 360px;
 	height: 360px;
 	display: flex;
-	margin-bottom: 23px;
+	margin: 20px auto;
 	flex-wrap: wrap;
 }
        #basla-butonu {
-  background-color: green;
+  background-color: #ff66b2;
   border: none;
   color: white;
   padding: 23px 41px; 
@@ -21,30 +31,39 @@
   font-size: 30px; /* font boyutunu belirlemek için kullanılır*/
   margin-bottom: 20px; /* Başla butonun altına boşluk bıramak için kullanılır*/
   cursor: pointer; /* Html ögesi üstüne geldiğinde el işareti şeklinde görülür */
-
 }
 
 #status {
   font-size: 24px;
-  color: rgb(111, 14, 14);
+  color: #a3005a;
 }
-
 
 .cell {
 	width: 120px;
 	height: 120px;
-	border: 5px solid #0616c7;
+	border: 5px solid #ff66b2;
 	box-sizing: border-box;
 	font-size: 90px;
 	text-align: center;
 	line-height: 100px;
 	cursor: pointer;
-	background-color: rgb(243, 198, 232);
-	color: #052802;
+	background-color: #ffd6e8;
+	color: #a3005a;
 }
 
 .cell:hover { /* fare imleci geldiğinde oluşan renk */
-	background-color: #de96d2;
+	background-color: #ff99cc;
+}
+
+#turn {
+	font-size: 24px;
+	color: #a3005a;
+}
+
+#scoreboard {
+	margin-top: 20px;
+	font-size: 20px;
+	color: #a3005a;
 }
 
     </style>
